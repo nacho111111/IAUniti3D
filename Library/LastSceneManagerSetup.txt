@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/MultiAgentCompact.unity
+- path: Assets/Scenes/MultiAgentv2.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

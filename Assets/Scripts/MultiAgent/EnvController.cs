@@ -112,6 +112,7 @@ public class EnvController : MonoBehaviour
             scoreHunted++;
             if (scoreHunted == 5)
             {
+                Debug.Log("Hunted Group Reward");
                 m_HuntedGroup.AddGroupReward(2 - (float)m_ResetTimer / MaxEnvironmentSteps);
                 m_HunterGroup.AddGroupReward(-1);
                 m_HuntedGroup.EndGroupEpisode();
@@ -125,6 +126,7 @@ public class EnvController : MonoBehaviour
             scoreHunter++;
             if (scoreHunter == 5)
             {
+                Debug.Log("Hunter Group Reward");
                 m_HunterGroup.AddGroupReward(2 - (float)m_ResetTimer / MaxEnvironmentSteps);
                 m_HuntedGroup.AddGroupReward(-1);
                 m_HuntedGroup.EndGroupEpisode();

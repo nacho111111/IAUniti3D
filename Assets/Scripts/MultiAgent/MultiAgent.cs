@@ -20,18 +20,25 @@ public class MultiAgent : Agent
     //    Hunted
     //}
 
+    public Color colorHunter;
+
+    public float Energy = 0f;
+    public float MaxEnergy = 100f;
+    public float LossOfEnergy = 0.2f ;
+
     [HideInInspector]
     public Team team;
 
     //public Role role;
 
     private float m_Existential; // penalizacion por tiempo de ejecucion 
+    public float m_HuntedExistentialBonus; // bonus por no morir hunted 
     
-    private Material m_MaterialHunted1;
+    //private Material m_MaterialHunted1;
     private Renderer m_Renderer;
     [SerializeField]
     [Tooltip("Solo se usa con hunter")]
-    private Material m_MaterialHunted2;
+    //private Material m_MaterialHunted2;
 
     [HideInInspector]
     public Rigidbody agentRb;
@@ -47,19 +54,15 @@ public class MultiAgent : Agent
         agentRb = GetComponent<Rigidbody>();
         m_envController = gameObject.GetComponentInParent<EnvController>();
 
-        if (m_envController != null)
-        {
-            m_Existential = 1f / m_envController.MaxEnvironmentSteps;
-        }
-        else
-        {
-            m_Existential = 1f / MaxStep;
-        }
-
+        m_Existential = 1f / m_envController.MaxEnvironmentSteps;
+ 
         m_BehaviorParameters = gameObject.GetComponent<BehaviorParameters>();
+
+        Energy = MaxEnergy;
         if (m_BehaviorParameters.TeamId == (int)Team.Hunted)
         {
             team = Team.Hunted;
+            m_HuntedExistentialBonus = 1f / m_envController.MaxEnvironmentSteps;
         }
         else
         {
@@ -67,13 +70,13 @@ public class MultiAgent : Agent
 
             // rederer initialize
             m_Renderer = GetComponentInParent<Renderer>();
-            m_MaterialHunted1 = m_Renderer.material;
+            //m_MaterialHunted1 = m_Renderer.material;
         }
     }
     public override void CollectObservations(VectorSensor sensor)
     {
         sensor.AddObservation(state); // bool, 1 observacion
-        sensor.AddObservation(transform.InverseTransformDirection(agentRb.velocity)); // referencia de orientacion // Vector3, 3 observaciones 
+        sensor.AddObservation(transform.InverseTransformDirection(agentRb.velocity)); // referencia de orientacion // Vector3, 3 observaciones
     }
     public void MoveAgent(ActionSegment<int> act)
     {
@@ -85,24 +88,47 @@ public class MultiAgent : Agent
         {
             case 1:
                 dirToGo = transform.forward * 1f;
+                Energy -= LossOfEnergy;
                 break;
             case 2:
                 dirToGo = transform.forward * -1f;
+                Energy -= LossOfEnergy;
                 break;
             case 3:
                 rotateDir = transform.up * 1f;
+                Energy -= LossOfEnergy;
                 break;
             case 4:
                 rotateDir = transform.up * -1f;
+                Energy -= LossOfEnergy;
                 break;
+                
         }
         transform.Rotate(rotateDir, Time.deltaTime * 200f);
         agentRb.AddForce(dirToGo * 2f, ForceMode.VelocityChange);
     }
     public override void OnActionReceived(ActionBuffers actionBuffers)
     {
-        AddReward(-m_Existential);
+        if (team == Team.Hunted)
+        {
+            AddReward(-m_Existential + m_HuntedExistentialBonus);
+            m_HuntedExistentialBonus += 0.01f / m_envController.MaxEnvironmentSteps;
+            if (Energy <= 0)
+            {
+                ResetAgentHunted();
+            }
+        }
+        else
+        {
+            AddReward(-m_Existential);
+            if (Energy <= 0)
+            {
+                ResetAgentHunter();
+            }
+        }
+            
         MoveAgent(actionBuffers.DiscreteActions); // recibe 1 vector de 5 observaciones 
+        
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -134,6 +160,7 @@ public class MultiAgent : Agent
                 state = false;
                 m_target.MoveTo(other.transform.position); // funcion mover a
                 m_target = null; // suelta el target que transporta 
+                Energy = MaxEnergy;
                 //AddReward(2f); // premio
             }
         }
@@ -142,7 +169,8 @@ public class MultiAgent : Agent
             if (state == true && other.CompareTag("HunterArea")) // cuando deposita la presa
             {
                 state = false;
-                m_Renderer.material = m_MaterialHunted1;
+                m_Renderer.material.color = Color.white;
+                Energy = MaxEnergy;
                 //AddReward(2f); // premio
             }
         }
@@ -163,7 +191,7 @@ public class MultiAgent : Agent
         {
             if (state == false && collision.gameObject.CompareTag("hunted")) // el cazador atrapa
             {
-                m_Renderer.material = m_MaterialHunted2;
+                m_Renderer.material.color = colorHunter;
 
                 AddReward(1f); // premio
                 state = true;
@@ -171,9 +199,8 @@ public class MultiAgent : Agent
 
                 // comportamiento hunted
                 MultiAgent agentHunted = collision.gameObject.GetComponent<MultiAgent>();
-                agentHunted.AddReward(-2f); // castigo al hunted
-                agentHunted.ReconfigTarget();
-                ResetAgentHunted(agentHunted);
+
+                agentHunted.ResetAgentHunted();
                 //collision.gameObject.SetActive(false); // desactiva el hunted
             }
         }
@@ -185,16 +212,34 @@ public class MultiAgent : Agent
             m_target.ResetTarget();
         }
     }
-    private void ResetAgentHunted(MultiAgent agentHunted)
+
+    // reespawn 
+
+    private void ResetAgentHunted() 
     {
-        agentHunted.state = false;
-        agentHunted.agentRb.velocity = Vector3.zero;
-        m_envController.SpawnObject(agentHunted.transform);
+        ReconfigTarget();
+        m_HuntedExistentialBonus = 1f / m_envController.MaxEnvironmentSteps;
+        ResetAgent();
+    }
+    private void ResetAgentHunter() 
+    {
+        ResetRendererHunter();
+        ResetAgent();
+    }
+    private void ResetAgent()
+    {
+        AddReward(-2f); // castigo  
+        state = false;
+        agentRb.velocity = Vector3.zero;
+        Energy = MaxEnergy;
+        m_envController.SpawnObject(transform);
     }
     public void ResetRendererHunter()
     {
-        m_Renderer.material = m_MaterialHunted1;
+        m_Renderer.material.color = Color.white;
     }
+
+    // end respawn
     public override void OnEpisodeBegin()
     {
 

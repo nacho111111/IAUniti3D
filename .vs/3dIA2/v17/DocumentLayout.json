@@ -3,20 +3,28 @@
   "WorkspaceRootPath": "D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{6445135C-CA54-5382-84AB-28FFF95368E1}|Assembly-CSharp.csproj|D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\assets\\scripts\\multiagent_v2\\envcontrollerv2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6445135C-CA54-5382-84AB-28FFF95368E1}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\multiagent_v2\\envcontrollerv2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6445135C-CA54-5382-84AB-28FFF95368E1}|Assembly-CSharp.csproj|d:\\users\\nacho\\desktop\\progra\\unity\\3dia2\\assets\\scripts\\multiagent_v2\\multiagentv2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6445135C-CA54-5382-84AB-28FFF95368E1}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\multiagent_v2\\multiagentv2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{6445135C-CA54-5382-84AB-28FFF95368E1}|Assembly-CSharp.csproj|D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\assets\\scripts\\multiagent\\envcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6445135C-CA54-5382-84AB-28FFF95368E1}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\multiagent\\envcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6445135C-CA54-5382-84AB-28FFF95368E1}|Assembly-CSharp.csproj|d:\\users\\nacho\\desktop\\progra\\unity\\3dia2\\assets\\scripts\\multiagent\\targetmulti.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{6445135C-CA54-5382-84AB-28FFF95368E1}|Assembly-CSharp.csproj|D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\assets\\scripts\\multiagent\\areasagents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6445135C-CA54-5382-84AB-28FFF95368E1}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\multiagent\\areasagents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6445135C-CA54-5382-84AB-28FFF95368E1}|Assembly-CSharp.csproj|D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\assets\\scripts\\multiagent\\targetmulti.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6445135C-CA54-5382-84AB-28FFF95368E1}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\multiagent\\targetmulti.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6445135C-CA54-5382-84AB-28FFF95368E1}|Assembly-CSharp.csproj|D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\assets\\scripts\\multiagent\\multiagent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6445135C-CA54-5382-84AB-28FFF95368E1}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\multiagent\\multiagent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6445135C-CA54-5382-84AB-28FFF95368E1}|Assembly-CSharp.csproj|D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\assets\\scripts\\multiagent\\areasagents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6445135C-CA54-5382-84AB-28FFF95368E1}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\multiagent\\areasagents.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,8 +34,60 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "EnvControllerv2.cs",
+              "DocumentMoniker": "D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\Assets\\Scripts\\MultiAgent_v2\\EnvControllerv2.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\MultiAgent_v2\\EnvControllerv2.cs",
+              "ToolTip": "D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\Assets\\Scripts\\MultiAgent_v2\\EnvControllerv2.cs",
+              "RelativeToolTip": "Assets\\Scripts\\MultiAgent_v2\\EnvControllerv2.cs",
+              "ViewState": "AQIAADEAAAAAAAAAAADwv00AAAAoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-14T20:58:17.56Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MultiAgentv2.cs",
+              "DocumentMoniker": "D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\Assets\\Scripts\\MultiAgent_v2\\MultiAgentv2.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\MultiAgent_v2\\MultiAgentv2.cs",
+              "ToolTip": "D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\Assets\\Scripts\\MultiAgent_v2\\MultiAgentv2.cs",
+              "RelativeToolTip": "Assets\\Scripts\\MultiAgent_v2\\MultiAgentv2.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAuAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-09-14T20:31:22.185Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TargetMulti.cs",
+              "DocumentMoniker": "D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\Assets\\Scripts\\MultiAgent\\TargetMulti.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\MultiAgent\\TargetMulti.cs",
+              "ToolTip": "D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\Assets\\Scripts\\MultiAgent\\TargetMulti.cs",
+              "RelativeToolTip": "Assets\\Scripts\\MultiAgent\\TargetMulti.cs",
+              "ViewState": "AQIAAAgAAAAAAAAAAAAQwDgAAAAjAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-10T23:49:42.867Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MultiAgent.cs",
+              "DocumentMoniker": "D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\Assets\\Scripts\\MultiAgent\\MultiAgent.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\MultiAgent\\MultiAgent.cs",
+              "ToolTip": "D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\Assets\\Scripts\\MultiAgent\\MultiAgent.cs",
+              "RelativeToolTip": "Assets\\Scripts\\MultiAgent\\MultiAgent.cs",
+              "ViewState": "AQIAAEUAAAAAAAAAAAAiwFcAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-10T23:49:50.661Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 3,
@@ -38,44 +98,20 @@
               "RelativeToolTip": "Assets\\Scripts\\MultiAgent\\AreasAgents.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABkAAAAvAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-16T18:35:12.208Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "EnvController.cs",
-              "DocumentMoniker": "D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\Assets\\Scripts\\MultiAgent\\EnvController.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\MultiAgent\\EnvController.cs",
-              "ToolTip": "D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\Assets\\Scripts\\MultiAgent\\EnvController.cs",
-              "RelativeToolTip": "Assets\\Scripts\\MultiAgent\\EnvController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAACAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-10T23:49:52.59Z",
+              "WhenOpened": "2024-08-16T18:35:12.208Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "MultiAgent.cs",
-              "DocumentMoniker": "D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\Assets\\Scripts\\MultiAgent\\MultiAgent.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\MultiAgent\\MultiAgent.cs",
-              "ToolTip": "D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\Assets\\Scripts\\MultiAgent\\MultiAgent.cs",
-              "RelativeToolTip": "Assets\\Scripts\\MultiAgent\\MultiAgent.cs",
-              "ViewState": "AQIAABsAAAAAAAAAAAAQwCwAAAAlAAAA",
+              "Title": "EnvController.cs",
+              "DocumentMoniker": "D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\Assets\\Scripts\\MultiAgent\\EnvController.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\MultiAgent\\EnvController.cs",
+              "ToolTip": "D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\Assets\\Scripts\\MultiAgent\\EnvController.cs",
+              "RelativeToolTip": "Assets\\Scripts\\MultiAgent\\EnvController.cs",
+              "ViewState": "AQIAAJUAAAAAAAAAAAAAAA8AAAAgAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-10T23:49:50.661Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "TargetMulti.cs",
-              "DocumentMoniker": "D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\Assets\\Scripts\\MultiAgent\\TargetMulti.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\MultiAgent\\TargetMulti.cs",
-              "ToolTip": "D:\\Users\\nacho\\Desktop\\Progra\\unity\\3dIA2\\Assets\\Scripts\\MultiAgent\\TargetMulti.cs",
-              "RelativeToolTip": "Assets\\Scripts\\MultiAgent\\TargetMulti.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABgAAAAYAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-10T23:49:42.867Z",
+              "WhenOpened": "2024-08-10T23:49:52.59Z",
               "EditorCaption": ""
             }
           ]

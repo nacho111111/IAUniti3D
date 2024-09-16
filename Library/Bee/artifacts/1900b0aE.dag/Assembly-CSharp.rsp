@@ -408,6 +408,8 @@
 "Assets/Scripts/MultiAgent/EnvController.cs"
 "Assets/Scripts/MultiAgent/MultiAgent.cs"
 "Assets/Scripts/MultiAgent/TargetMulti.cs"
+"Assets/Scripts/MultiAgent_v2/EnvControllerv2.cs"
+"Assets/Scripts/MultiAgent_v2/MultiAgentv2.cs"
 "Assets/Scripts/SoleAgent/AgentML.cs"
 "Assets/Scripts/Target.cs"
 "Assets/Scripts/UnloadingArea.cs"

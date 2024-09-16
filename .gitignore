@@ -95,3 +95,8 @@ coverage.xml
 /htmlcov/
 
 **/UserSettings/*
+
+
+# Ignorar la carpeta Temp y Library de Unity
+Temp/
+Library/
