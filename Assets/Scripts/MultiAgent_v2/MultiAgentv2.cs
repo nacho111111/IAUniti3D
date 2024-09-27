@@ -16,19 +16,20 @@ public class MultiAgentv2 : Agent
     //}
 
     [HideInInspector] public Color colorState;
-
     public float Energy;
     [HideInInspector] public float MaxEnergy;
     [HideInInspector] public float LossOfEnergy;
     [HideInInspector] public float MovSpeed;
 
+    private float m_RealLossEnergy;
     [HideInInspector]
     public Team team;
 
     //public Role role;
 
     private float m_Existential; // penalizacion por tiempo de ejecucion 
-    [SerializeField] private float m_HuntedExistentialBonus; // bonus por no morir hunted 
+    private float m_HuntedExistentialBonus; // bonus por no morir hunted 
+    public float temp;
   
     private Renderer m_Renderer;
 
@@ -48,14 +49,13 @@ public class MultiAgentv2 : Agent
         m_envController = gameObject.GetComponentInParent<EnvControllerv2>();
 
         m_Existential = 1f / m_envController.MaxEnvironmentSteps;
-
+        m_RealLossEnergy = LossOfEnergy;
 
         m_BehaviorParameters = gameObject.GetComponent<BehaviorParameters>();
 
         if (m_BehaviorParameters.TeamId == (int)Team.Hunted)
         {
             team = Team.Hunted;
-            m_HuntedExistentialBonus = 1f / m_envController.MaxEnvironmentSteps;
         }
         else
         {
@@ -66,6 +66,7 @@ public class MultiAgentv2 : Agent
     {
         sensor.AddObservation(state); // bool, 1 observacion
         sensor.AddObservation(transform.InverseTransformDirection(agentRb.velocity)); // referencia de orientacion // Vector3, 3 observaciones
+        sensor.AddObservation(Energy/MaxEnergy); // energia normalizada 
     }
     public void MoveAgent(ActionSegment<int> act)
     {
@@ -76,23 +77,23 @@ public class MultiAgentv2 : Agent
         switch (action)
         {
             case 0:// no hace nada
-                Energy -= LossOfEnergy * 0.1f;
+                Energy -= m_RealLossEnergy * 0.1f;
                 break;
             case 1:
                 dirToGo = transform.forward * 1f;
-                Energy -= LossOfEnergy;
+                Energy -= m_RealLossEnergy;
                 break;
             case 2:
                 dirToGo = transform.forward * -1f;
-                Energy -= LossOfEnergy;
+                Energy -= m_RealLossEnergy;
                 break;
             case 3:
                 rotateDir = transform.up * 1f;
-                Energy -= LossOfEnergy;
+                Energy -= m_RealLossEnergy;
                 break;
             case 4:
                 rotateDir = transform.up * -1f;
-                Energy -= LossOfEnergy;
+                Energy -= m_RealLossEnergy;
                 break;
         }
         transform.Rotate(rotateDir, Time.deltaTime * 200f);
@@ -106,10 +107,11 @@ public class MultiAgentv2 : Agent
         if (team == Team.Hunted)
         {
             AddReward(-m_Existential + m_HuntedExistentialBonus);
-            m_HuntedExistentialBonus += 0.01f / m_envController.MaxEnvironmentSteps;
+            temp = -m_Existential + m_HuntedExistentialBonus;
+            m_HuntedExistentialBonus += 0.001f / m_envController.MaxEnvironmentSteps;
             if (Energy <= 0)
             {
-                RespawnAgentHunted();
+                RespawnAgent();
             }
         }
         else
@@ -178,6 +180,7 @@ public class MultiAgentv2 : Agent
                 state = true;
                 Energy = MaxEnergy;
                 m_Renderer.material.color = colorState;
+                m_RealLossEnergy = 0; // al "comer" deja de perder energia
                 AddReward(1.5f);
                 m_envController.RewardGroup(Team.Hunted);
 
@@ -197,6 +200,7 @@ public class MultiAgentv2 : Agent
                 state = true;
                 Energy = MaxEnergy;
                 m_Renderer.material.color = colorState;
+                m_RealLossEnergy = 0;
                 AddReward(2f); // premio
                 m_envController.RewardGroup(Team.Hunter);
 
@@ -205,7 +209,7 @@ public class MultiAgentv2 : Agent
                 // comportamiento hunted
                 MultiAgentv2 agentHunted = collision.gameObject.GetComponent<MultiAgentv2>();
             
-                agentHunted.RespawnAgentHunted();
+                agentHunted.RespawnAgent();
                 //collision.gameObject.SetActive(false); // desactiva el hunted
                 
             }
@@ -221,29 +225,33 @@ public class MultiAgentv2 : Agent
 
     // reespawn 
 
-    private void RespawnAgentHunted()
-    {
-        //ReconfigTarget();
-        m_HuntedExistentialBonus = 1f / m_envController.MaxEnvironmentSteps;
-        RespawnAgent();
-    }
     private void RespawnAgent()
     {
         if (state == true)
         {
             m_envController.Penalize(team);
+            AddReward(-3f); // si "comio" y "muere" el castigo es mayor
         }
-        AddReward(-2f); // castigo  
+        else
+        {
+            AddReward(-2f); 
+        }
+        
         ResetAgent();
         m_envController.SpawnObject(transform);
     }
     public void ResetAgent()
     {
+        if (team == Team.Hunted)
+        {
+            m_HuntedExistentialBonus = 0;
+        }
         agentRb.angularVelocity = Vector3.zero;
         agentRb.velocity = Vector3.zero;
         state = false;
         Energy = MaxEnergy;
         m_Renderer.material.color = Color.white;
+        m_RealLossEnergy = LossOfEnergy;
     }
 
     // end respawn

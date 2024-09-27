@@ -12,6 +12,7 @@ TagManager:
   - hunted
   - HuntedArea
   - HunterArea
+  - Generator
   layers:
   - Default
   - TransparentFX

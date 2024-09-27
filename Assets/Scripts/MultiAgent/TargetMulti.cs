@@ -10,7 +10,7 @@ public class TargetMulti : MonoBehaviour
 
     private Transform m_goTo;
     private Rigidbody m_rb;
-    private BoxCollider m_bc;
+    private SphereCollider m_sc;
     private MultiAgent m_agent;
     private EnvController m_spawn;
 
@@ -25,7 +25,7 @@ public class TargetMulti : MonoBehaviour
     private void Awake()
     {
         m_rb = GetComponent<Rigidbody>();
-        m_bc = GetComponent<BoxCollider>();
+        m_sc = GetComponent<SphereCollider>();
         m_spawn = gameObject.GetComponentInParent<EnvController>();
     }
     void Update()   // 3 estados, 1 reposo no hace nada espera colicion con "Hunted", 2 colicion con "hunted" lo sigue, 3 "hunted" lo deposita en el area de descarga.
@@ -64,7 +64,7 @@ public class TargetMulti : MonoBehaviour
         //{
             //m_move = false;
         m_goTo = other;
-        m_bc.enabled = false;
+        m_sc.enabled = false;
         m_rb.useGravity = false;
         m_rb.constraints |= RigidbodyConstraints.FreezePositionY;
         //}
@@ -87,7 +87,7 @@ public class TargetMulti : MonoBehaviour
         m_goTo = null;
         //m_move = true;
         //boxcollider - rigidbody
-        m_bc.enabled = true;
+        m_sc.enabled = true;
         m_rb.velocity = Vector3.zero;
         m_rb.useGravity = true;
         m_rb.constraints &= ~RigidbodyConstraints.FreezePositionY;
