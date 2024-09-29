@@ -14,6 +14,8 @@ public class MultiAgentv3 : Agent
     [HideInInspector] public float MaxEnergy;
     [HideInInspector] public float LossEnergy;
     [HideInInspector] public float MovSpeed;
+    [HideInInspector] public int reproductionRate;
+    public int m_FoodCount = 0;
 
     private float m_RealLossEnergy; // este varia entre 0 y LossOEnergy
     [HideInInspector] public Team team;
@@ -25,7 +27,7 @@ public class MultiAgentv3 : Agent
     // state
     public bool state;  // estado, si ha comido o no
     private float m_TimerState  = 0;
-    private float m_IntervalTimerState = 2f;
+    [HideInInspector] public float IntervalTimerState;
     // end state
 
     // references 
@@ -120,7 +122,7 @@ public class MultiAgentv3 : Agent
         if (state == true)
         {
             m_TimerState += Time.deltaTime;
-            if (m_TimerState >= m_IntervalTimerState)
+            if (m_TimerState >= IntervalTimerState)
             {
                 state = false;
                 m_TimerState = 0f;
@@ -165,10 +167,16 @@ public class MultiAgentv3 : Agent
                 AddReward(1.5f);
                 m_envController.RewardGroup(Team.Hunted);
 
-                collision.gameObject.GetComponent<TargetMulti>().ResetTarget();
+                //collision.gameObject.GetComponent<TargetMulti>().ResetTarget();
                 //m_envController.SpawnObject(collision.transform); // se puede optimizar 
                 m_envController.DespawnTarget(collision.gameObject);
-                m_envController.SpawnAgent(team,transform.position); // duplica agente 
+
+                m_FoodCount++;
+                if (m_FoodCount >= reproductionRate)
+                {
+                    m_envController.SpawnAgent(team, transform.position); // duplica agente 
+                    m_FoodCount = 0;
+                }
             }
         }
         else
@@ -182,17 +190,17 @@ public class MultiAgentv3 : Agent
                 AddReward(2f); // premio
                 m_envController.RewardGroup(Team.Hunter);
 
-                m_envController.SpawnAgent(team, transform.position); // duplica agente 
-
-                //Debug.Log(gameObject.name + " ha cazado a " + collision.gameObject.name);
+                m_FoodCount++;
+                if (m_FoodCount >= reproductionRate)
+                {
+                    m_envController.SpawnAgent(team, transform.position); // duplica agente 
+                    m_FoodCount = 0;
+                }
 
                 // comportamiento hunted
                 MultiAgentv3 agentHunted = collision.gameObject.GetComponent<MultiAgentv3>();
 
                 agentHunted.InactivateAgent();
-                
-                //collision.gameObject.SetActive(false); // desactiva el hunted
-
             }
         }
     }
@@ -226,6 +234,7 @@ public class MultiAgentv3 : Agent
         Energy = MaxEnergy;
         m_Renderer.material.color = Color.white;
         m_RealLossEnergy = LossEnergy;
+        m_FoodCount = 0;
     }
 
     // end respawn

@@ -1,3 +1,4 @@
+using Palmmedia.ReportGenerator.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -39,17 +40,23 @@ public class EnvControllerv3 : MonoBehaviour
 
     [Tooltip("Max Environment Steps")] public int MaxEnvironmentSteps = 25000;
 
-    public Color colorHuntedState;
-    public Color colorHunterState;
+    [SerializeField] private Color m_colorHuntedState;
+    [SerializeField] private Color m_colorHunterState;
 
-    public float MovSpeedHunted = 2;
-    public float MovSpeedHunter = 2;
+    [SerializeField, Range(1, 5)] private float m_MovSpeedHunted = 2;
+    [SerializeField, Range(1, 5)] private float m_MovSpeedHunter = 2;
 
-    public float MaxEnergyHunted;
-    public float MaxEnergyHunter;
+    [SerializeField, Range(10, 200)] private float m_MaxEnergyHunted = 100;
+    [SerializeField, Range(10, 200)] private float m_MaxEnergyHunter = 150;
 
-    public float LossOfEnergyHunted;
-    public float LossOfEnergyHunter;
+    [SerializeField, Range(0.1f, 1f)] private float m_LossEnergyHunted = 0.1f;
+    [SerializeField, Range(0.1f, 1f)] private float m_LossEnergyHunter = 0.1f;
+
+    [Tooltip("Cada cuantas comidas se reproduce el hunted"), SerializeField, Range(1, 10)] private int m_repRateHunted = 2;
+    [Tooltip("Cada cuantas comidas se reproduce el hunter"), SerializeField, Range(1, 10)] private int m_repRateHunter = 2;
+
+    [Tooltip("Tiempo entre comidas del hunted"), SerializeField, Range(0, 10)] private float m_TimerStateHunted = 2;
+    [Tooltip("Tiempo entre comidas del hunter"), SerializeField, Range(0, 10)] private float m_TimerStateHunter = 2;
 
     private SimpleMultiAgentGroup m_HuntedGroup;
     private SimpleMultiAgentGroup m_HunterGroup;
@@ -57,13 +64,13 @@ public class EnvControllerv3 : MonoBehaviour
     private int m_ResetTimer;
     [Header("Generator")]
 
-    [SerializeField] private float GrowthTime;
-    [SerializeField] private float DespawnTime;
-    [SerializeField] private float FoodGenerateTime;
-    [SerializeField] private int FoodSpawnRate;
-    [SerializeField] private Material PostMaterial;
-
-
+    [SerializeField, Range(5, 30)] private float m_GrowthTime;
+    [SerializeField, Range(10, 120)] private float m_DespawnTime;
+    [SerializeField, Range(1, 10)] private int m_FoodSpawnRate;
+    [SerializeField, Range(1, 20)] private int m_SpawnConut;
+    [SerializeField, Range(1, 10)] private int m_GeneratorSpawnRate;
+    [SerializeField] private Material m_PostMaterial;
+    
     [Header("Listas")]
 
     public List<PlayerInfo> AgentsList = new List<PlayerInfo>();
@@ -73,12 +80,18 @@ public class EnvControllerv3 : MonoBehaviour
     private Stack<GameObject> IdleHunterStack = new Stack<GameObject>();
     private Stack<GameObject> IdleTargetStack = new Stack<GameObject>();
     private Stack<GameObject> IdleGeneratorStack = new Stack<GameObject>();
+    private Stack<GameObject> IdleFertilizerStack = new Stack<GameObject>();
+
+    [Header("Prefavs")]
 
     [SerializeField] private GameObject m_PrefavHunted;
     [SerializeField] private GameObject m_PrefavHunter;
     [SerializeField] private GameObject m_PrefavGenerator;
+    private float prefavGeneratorY;
     [SerializeField] private GameObject m_PrefavTarget;
-    
+    [SerializeField] private GameObject m_PrefavFertilizer;
+
+
 
     private int m_countAgents;
     private int m_countTarget;
@@ -86,20 +99,29 @@ public class EnvControllerv3 : MonoBehaviour
 
     private int scoreHunted = 0;
     private int scoreHunter = 0;
+    private void OnValidate()
+    {
+        if (m_GrowthTime >= m_DespawnTime - 10)
+        {
+            m_GrowthTime = m_DespawnTime - 10;
+            Debug.LogWarning("El tiempo de despawn tiene que ser considerablemente mayor al de crecimiento. Se ha ajustado automáticamente.");
+        }
+    }
+             //////////////////
+            /// Initialize ///
+           //////////////////
 
-                 //////////////////
-                /// Initialize ///
-               //////////////////
-    
     void Start()
     {
         // el colicionador de "unloadingArea" no se aplica para "hunted", ya que este simula un escodite para estos 
-        Physics.IgnoreLayerCollision(6, 7);
+        //Physics.IgnoreLayerCollision(6, 7);
 
         // Initialize count
         m_countAgents = AgentsList.Count;
         m_countSpawns = SpawnList.Count;
         //m_countTarget = TargetList.Count;
+
+        prefavGeneratorY = m_PrefavGenerator.transform.position.y; // evita hacer esta consulta constantemente
 
         // Initialize TeamManager
         m_HuntedGroup = new SimpleMultiAgentGroup();
@@ -132,42 +154,43 @@ public class EnvControllerv3 : MonoBehaviour
         }
         ResetScene();
     }
-    void FixedUpdate()
-    {
-        m_ResetTimer += 1;
-        if (m_ResetTimer >= MaxEnvironmentSteps && MaxEnvironmentSteps > 0)
-        {
-            m_HuntedGroup.GroupEpisodeInterrupted();
-            m_HunterGroup.GroupEpisodeInterrupted();
-            ResetScene();
-        }
-    }
+    //void FixedUpdate()
+    //{
+    //    m_ResetTimer += 1;
+    //    if (m_ResetTimer >= MaxEnvironmentSteps && MaxEnvironmentSteps > 0)
+    //    {
+    //        m_HuntedGroup.GroupEpisodeInterrupted();
+    //        m_HunterGroup.GroupEpisodeInterrupted();
+    //        ResetScene();
+    //    }
+    //}
     private void InitializeHunted(MultiAgentv3 hunted)
     {
-        hunted.colorState = colorHuntedState;
-        hunted.MaxEnergy = MaxEnergyHunted;
-        hunted.Energy = MaxEnergyHunted;
-        hunted.LossEnergy = LossOfEnergyHunted;
-        hunted.MovSpeed = MovSpeedHunted;
+        hunted.colorState = m_colorHuntedState;
+        hunted.MaxEnergy = m_MaxEnergyHunted;
+        hunted.Energy = m_MaxEnergyHunted;
+        hunted.LossEnergy = m_LossEnergyHunted;
+        hunted.MovSpeed = m_MovSpeedHunted;
+        hunted.reproductionRate = m_repRateHunted;
+        hunted.IntervalTimerState = m_TimerStateHunted;
     }
-    private void InitializeHunter(MultiAgentv3 hunted)
+    private void InitializeHunter(MultiAgentv3 hunter)
     {
-        hunted.colorState = colorHunterState;
-        hunted.LossEnergy = LossOfEnergyHunter;
-        hunted.MaxEnergy = MaxEnergyHunter;
-        hunted.Energy = MaxEnergyHunter;
-        hunted.MovSpeed = MovSpeedHunter;
+        hunter.colorState = m_colorHunterState;
+        hunter.LossEnergy = m_LossEnergyHunter;
+        hunter.MaxEnergy = m_MaxEnergyHunter;
+        hunter.Energy = m_MaxEnergyHunter;
+        hunter.MovSpeed = m_MovSpeedHunter;
+        hunter.reproductionRate = m_repRateHunter;
+        hunter.IntervalTimerState = m_TimerStateHunter;
     }
-    private void InitializeGenerator(Generator generator)
+    public void InitializeGenerator(Generatorv2 generator)
     {
-        generator.DespawnTime = DespawnTime;
-        generator.RealDespawnTime = DespawnTime;
-        generator.GenerateTime = FoodGenerateTime;
-        generator.RealGenerateTime = FoodGenerateTime;
-        generator.GrowthTime = GrowthTime;
-        generator.RealGrowthTime = GrowthTime;
-        generator.SpawnRate = FoodSpawnRate; 
-        generator.PostMaterial = PostMaterial;
+        generator.DespawnTime = m_DespawnTime;
+        generator.GrowthTime = m_GrowthTime;
+        generator.SpawnRate = m_FoodSpawnRate;
+        generator.SpawnCount = m_SpawnConut;
+        generator.PostMaterial = m_PostMaterial;
     }
 
              ///////////////
@@ -187,7 +210,7 @@ public class EnvControllerv3 : MonoBehaviour
                 m_HunterGroup.AddGroupReward(-1);
                 m_HuntedGroup.EndGroupEpisode();
                 m_HunterGroup.EndGroupEpisode();
-                ResetScene();
+                //ResetScene();
             }
         }
         else
@@ -201,7 +224,7 @@ public class EnvControllerv3 : MonoBehaviour
                 m_HuntedGroup.AddGroupReward(-1);
                 m_HuntedGroup.EndGroupEpisode();
                 m_HunterGroup.EndGroupEpisode();
-                ResetScene();
+                //ResetScene();
             }
             //HowManyHunted();
         }
@@ -228,9 +251,9 @@ public class EnvControllerv3 : MonoBehaviour
     //    }
     //}
 
-    //////////////
-    /// spawns ///
-    //////////////
+             //////////////
+            /// spawns ///
+           //////////////
 
     public void SpawnObject(Transform tr)
     {
@@ -292,23 +315,54 @@ public class EnvControllerv3 : MonoBehaviour
     }
     // end Agent
 
-    // generator
+    // fertilizer
     public void AddFertilizer(Vector3 position)
     {
-        SpawnGenerator(position);
+        int ran = Random.Range(0, m_GeneratorSpawnRate);
+        if (ran == 0)
+        {
+            SpawnGenerator(position);
+        }
+        SpawnFertilizer(position);
     }
+    private void SpawnFertilizer(Vector3 position)
+    {
+        if (IdleFertilizerStack.Count > 0)
+        {
+            GameObject gameObject = IdleFertilizerStack.Pop();
+            gameObject.SetActive(true);
+            //gameObject.transform.position = position + new Vector3(0,-0.56f,0);
+            gameObject.transform.position = position;
+        }
+        else
+        {
+            GameObject gameObject = Instantiate(m_PrefavFertilizer, position, Quaternion.identity, transform);
+        }
+    }
+    public void DespawnFertilizer(GameObject Fertilizer)
+    {
+        Fertilizer.SetActive(false);
+        IdleFertilizerStack.Push(Fertilizer);
+    }
+    // end fertilizer
+
+    // generator
     private void SpawnGenerator(Vector3 position)
     {
         if (IdleGeneratorStack.Count > 0)
         {
             GameObject gameObject = IdleGeneratorStack.Pop();
             gameObject.SetActive(true);
-            gameObject.transform.position = position + new Vector3(0,-0.56f,0);
+            //gameObject.transform.position = position + new Vector3(0,-0.56f,0);
+            gameObject.transform.position = new Vector3(position.x, prefavGeneratorY, position.z);
         }
         else
         {
-            GameObject gameObject = Instantiate(m_PrefavGenerator, position + new Vector3(0, -0.56f, 0), Quaternion.identity, transform);
-            InitializeGenerator(gameObject.GetComponent<Generator>());
+
+            GameObject gameObject = Instantiate(m_PrefavGenerator, new Vector3(position.x, prefavGeneratorY, position.z), Quaternion.identity, transform);
+            
+
+            //InitializeGenerator(gameObject.GetComponent<Generatorv2>()); // se llama en generator par evitar errores en el tiempo de ejecucion
         }
     }
     public void DespawnGenerator(GameObject generator)
@@ -321,19 +375,22 @@ public class EnvControllerv3 : MonoBehaviour
     // target
     public void SpawnTarget(Vector3 position)
     {
+        int ran1 = Random.Range(-5, 5);
+        int ran2 = Random.Range(-5, 5);
         if (IdleTargetStack.Count > 0)
         {
             GameObject gameObject = IdleTargetStack.Pop();
             gameObject.SetActive(true);
-            gameObject.transform.position = position + new Vector3(5,5,0);
+            gameObject.transform.position = position + new Vector3(ran1, 5, ran2);
         }
         else
         {
-            Instantiate(m_PrefavTarget, position + new Vector3(5, 5, 0), Quaternion.identity, transform);
+            Instantiate(m_PrefavTarget, position + new Vector3(ran1, 5, ran2), Quaternion.identity, transform);
         }
     }
     public void DespawnTarget(GameObject target)
     {
+        target.GetComponent<Targetv3>().ResetTarget();
         target.SetActive(false);
         IdleTargetStack.Push(target);
     }

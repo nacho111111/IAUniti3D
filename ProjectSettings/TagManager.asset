@@ -13,6 +13,7 @@ TagManager:
   - HuntedArea
   - HunterArea
   - Generator
+  - Fertilizer
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - UI
   - HuntedWall
   - Hunted
-  - 
+  - Fertilizer
   - 
   - 
   - 
